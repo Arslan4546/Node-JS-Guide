@@ -5,8 +5,8 @@
 function greet(name) {
   return "Hello " + name;
 }
-
 console.log(greet("Ali")); // Hello Ali
+
 
 //🔹 Arrow Function ⭐
 const greet = (name) => {
@@ -15,10 +15,9 @@ const greet = (name) => {
 
 
 //👉 Short form:
-
 const greet = name => "Hello " + name;
-//🔥 Difference (Important)
 
+//🔥 Difference (Important)
 // Arrow function:
 // this inherit karti hai
 // Short & clean hoti hai
@@ -39,3 +38,4 @@ numbers.filter(x => x > 2); // filter
 //🔥 Real Example
 let users = ["Ali", "Ahmed", "Sara"];
 let result = users.map(user => user.toUpperCase());
+console.log(result); // ["ALI", "AHMED", "SARA"]
