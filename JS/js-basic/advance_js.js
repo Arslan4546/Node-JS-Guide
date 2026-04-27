@@ -32,5 +32,6 @@ let obj = {
   }
 };
 
-
+console.log(obj.name); // Ali
+obj.show(); // Ali
 // 👉 this current object ko refer karta hai
