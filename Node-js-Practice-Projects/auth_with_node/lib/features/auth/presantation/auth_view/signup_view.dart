@@ -62,6 +62,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 label: "Email",
                 icon: Icons.email_outlined,
                 controller: _emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter your email";
+                  }
+                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                    return "Please enter a valid email";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               AuthTextField(
@@ -69,6 +78,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 icon: Icons.lock_outline,
                 controller: _passController,
                 isPassword: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter your password";
+                  }
+                  if (value.length < 6) {
+                    return "Password must be at least 6 characters long";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 24),
               PrimaryButton(text: "Sign Up", onPressed: _handleSignUp),
