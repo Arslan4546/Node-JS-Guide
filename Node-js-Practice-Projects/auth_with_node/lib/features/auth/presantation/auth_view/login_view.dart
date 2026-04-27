@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:auth_with_node/core/utils/flush_bar.dart';
 import 'package:auth_with_node/features/auth/presantation/auth_widgets.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,15 +16,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
   Future<void> _handleLogin() async {
     try {
       final response = await http.post(
-        Uri.parse("http://10.0.2.2:3000/api/auth/login"),
+        Uri.parse("http://localhost:3000/api/auth/login"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
-          "email": _emailController.text,
-          "password": _passController.text,
+          "email": _emailController.text.trim(),
+          "password": _passController.text.trim(),
         }),
       );
 
@@ -37,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.statusCode == 200) {
         FlushbarHelper.showSuccess(context: context, message: data["message"]);
       } else {
+        // ❌ error from backend
         FlushbarHelper.showError(context: context, message: data["message"]);
       }
     } catch (e) {
@@ -73,6 +72,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 label: "Email",
                 icon: Icons.email_outlined,
                 controller: _emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter your email";
+                  }
+                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                    return "Please enter a valid email";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               AuthTextField(
@@ -80,6 +88,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 icon: Icons.lock_outline,
                 controller: _passController,
                 isPassword: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter your password";
+                  }
+                  if (value.length < 6) {
+                    return "Password must be at least 6 characters long";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 24),
               PrimaryButton(

@@ -18,23 +18,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
   Future<void> _handleSignUp() async {
-    if (_formKey.currentState!.validate()) {
+    try {
       final response = await http.post(
-        Uri.parse("http://10.0.2.2:3000/api/auth/signup"),
+        Uri.parse("http://localhost:3000/api/auth/signup"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
-          "email": _emailController.text,
-          "password": _passController.text,
+          "email": _emailController.text.trim(),
+          "password": _passController.text.trim(),
         }),
       );
+
+      print("Status Code: ${response.statusCode}");
+      print("Body: ${response.body}");
 
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 201) {
         FlushbarHelper.showSuccess(context: context, message: data["message"]);
       } else {
+        // ❌ error from backend
         FlushbarHelper.showError(context: context, message: data["message"]);
       }
+    } catch (e) {
+      print("ERROR: $e");
+
+      FlushbarHelper.showError(
+        context: context,
+        message: "Network Error / Server not reachable",
+      );
     }
   }
 
